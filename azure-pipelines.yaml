@@ -1,0 +1,29 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  name: aws-cdk-app
+  demands:
+    - agent.name -equals cdk-syndicate
+
+variables:
+  - group: dev
+  - name: DOCKER_REPOSITORY
+    value: $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(DOCKER_REPOSITORY_NAME)
+
+steps:
+- script: |
+   python3 -m venv env
+   source ./env/bin/activate
+   pip install -r requirements.txt
+  displayName: Create virtual environment and install dependencies
+
+- script: |
+   cdk bootstrap 
+  displayName: CDK Bootstrap
+
+- script: |
+   cdk deploy 
+  displayName: CDK Deploy
