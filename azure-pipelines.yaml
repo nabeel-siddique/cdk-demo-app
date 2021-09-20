@@ -36,7 +36,7 @@ steps:
     export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
     export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     export AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
-    cdk bootstrap
+    cdk bootstrap 317048034783/eu-west-2
     cdk deploy
 
   displayName: Assume role with external id and execute deployment
