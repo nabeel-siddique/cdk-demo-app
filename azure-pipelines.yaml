@@ -23,12 +23,10 @@ steps:
     printf "%sPlease install cdk %s\\n" 
     exit 1
    fi
-  displayName: Create virtual environment and install dependencies
+  displayName: Check if jq and cdk are installed
 
 - script: |
 
-    python3 -m venv env
-    source ./env/bin/activate
     pip install -r requirements.txt
     ASSUMED_CREDENTIALS=$(aws sts assume-role --role-arn arn:aws:iam::317048034783:role/ado-cdk-app --role-session-name cdk-app-cdployment-ado --external-id dYYEBxxUk97WmbYy)
     AWS_ACCESS_KEY_ID=$(echo "${ASSUMED_CREDENTIALS}" | jq -r .Credentials.AccessKeyId)
