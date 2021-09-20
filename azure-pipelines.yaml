@@ -13,12 +13,18 @@ variables:
   - name: ROLE_ARN
     value: arn:aws:iam::$(AWS_ACCOUNT_ID):role/$(ROLE_NAME)
 
-- task: ShellScript@2
-  displayName: Check CDK and jq
-  inputs:
-    scriptPath: scripts/check-agent-capabilities.sh
-
 steps:
+
+- script: |
+   if ! [ -x "$(command -v jq)" ]; then
+    printf "%sPlease install jq %s\\n" 
+    exit 1
+   elif ! [ -x "$(command -v cdk)" ]; then
+    printf "%sPlease install cdk %s\\n" 
+    exit 1
+   fi
+  displayName: Create virtual environment and install dependencies
+
 - script: |
    python3 -m venv env
    source ./env/bin/activate
