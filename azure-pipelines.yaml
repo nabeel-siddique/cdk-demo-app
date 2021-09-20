@@ -45,7 +45,7 @@ steps:
   displayName: Create virtual environment and install dependencies
 
 - script: |
-   cdk bootstrap 
+   cdk bootstrap $(AWS_ACCOUNT_ID)/$(AWS_REGION)
   displayName: CDK Bootstrap
 
 - script: |
