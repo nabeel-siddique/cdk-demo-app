@@ -9,9 +9,14 @@ pool:
     - agent.name -equals cdk-syndicate
 
 variables:
-  - group: dev
-  - name: DOCKER_REPOSITORY
-    value: $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(DOCKER_REPOSITORY_NAME)
+  - group: vars 21-Sep
+  - name: ROLE_ARN
+    value: arn:aws:iam::$(AWS_ACCOUNT_ID):role/$(ROLE_NAME)
+
+- task: ShellScript@2
+  displayName: Check CDK and jq
+  inputs:
+    scriptPath: ./scripts/check-agent-capabilities.sh
 
 steps:
 - script: |
@@ -19,6 +24,19 @@ steps:
    source ./env/bin/activate
    pip install -r requirements.txt
   displayName: Create virtual environment and install dependencies
+
+- script: |
+    ASSUMED_CREDENTIALS=$(aws sts assume-role --role-arn $(ROLE_ARN) --role-session-name cdk-app-cdployment-ado --external-id $(EXTERNAL_ID))
+    AWS_ACCESS_KEY_ID=$(echo "${ASSUMED_CREDENTIALS}" | jq -r .Credentials.AccessKeyId)
+    AWS_SECRET_ACCESS_KEY=$(echo "${ASSUMED_CREDENTIALS}" | jq -r .Credentials.SecretAccessKey)
+    AWS_SESSION_TOKEN=$(echo "${ASSUMED_CREDENTIALS}" | jq -r .Credentials.SessionToken)
+
+    export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+    export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    export AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
+
+    printf "\\n%sRole assumed%s"
+  displayName: Assume role with external id
 
 - script: |
    cdk bootstrap 
