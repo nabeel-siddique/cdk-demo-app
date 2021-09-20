@@ -16,7 +16,7 @@ variables:
 - task: ShellScript@2
   displayName: Check CDK and jq
   inputs:
-    scriptPath: ./scripts/check-agent-capabilities.sh
+    scriptPath: scripts/check-agent-capabilities.sh
 
 steps:
 - script: |
