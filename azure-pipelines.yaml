@@ -12,8 +12,6 @@ variables:
   - group: vars 21-Sep
   - name: ROLE_ARN
     value: arn:aws:iam::$(AWS_ACCOUNT_ID):role/$(ROLE_NAME)
-  - name: ASSUME_ROLE
-    value: aws sts assume-role --role-arn $(ROLE_ARN) --role-session-name cdk-app-cdployment-ado --external-id $(EXTERNAL_ID)
 
 steps:
 
@@ -28,7 +26,7 @@ steps:
   displayName: Create virtual environment and install dependencies
 
 - script: |
-    ASSUMED_CREDENTIALS=$(ASSUME_ROLE)
+    ASSUMED_CREDENTIALS=$(aws sts assume-role --role-arn arn:aws:iam::317048034783:role/ado-cdk-app --role-session-name cdk-app-cdployment-ado --external-id dYYEBxxUk97WmbYy)
     AWS_ACCESS_KEY_ID=$(echo "${ASSUMED_CREDENTIALS}" | jq -r .Credentials.AccessKeyId)
     AWS_SECRET_ACCESS_KEY=$(echo "${ASSUMED_CREDENTIALS}" | jq -r .Credentials.SecretAccessKey)
     AWS_SESSION_TOKEN=$(echo "${ASSUMED_CREDENTIALS}" | jq -r .Credentials.SessionToken)
