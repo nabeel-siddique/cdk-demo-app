@@ -27,6 +27,7 @@ steps:
 
 - script: |
     ASSUMED_CREDENTIALS=$(aws sts assume-role --role-arn arn:aws:iam::317048034783:role/ado-cdk-app --role-session-name cdk-app-cdployment-ado --external-id dYYEBxxUk97WmbYy)
+    echo ${ASSUMED_CREDENTIALS}
     AWS_ACCESS_KEY_ID=$(echo "${ASSUMED_CREDENTIALS}" | jq -r .Credentials.AccessKeyId)
     AWS_SECRET_ACCESS_KEY=$(echo "${ASSUMED_CREDENTIALS}" | jq -r .Credentials.SecretAccessKey)
     AWS_SESSION_TOKEN=$(echo "${ASSUMED_CREDENTIALS}" | jq -r .Credentials.SessionToken)
